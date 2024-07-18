@@ -14,6 +14,8 @@ type SlackClientInterface interface {
 	SendMessage(channelId string, message string) error
 	// Sends an image to a channel. A user id can be used for direct messages.
 	SendImage(channelId string, image string, alt string) error
+	// Replies a message as a thread in a channel. A user id can be used for direct messages.
+	ReplyMessage(channelId string, timestamp string, message string) error
 	// Replies an image with a message as a thread in a channel. A user id can be used for direct messages.
 	ReplyImageWithMessage(channelId string, timestamp string, image string, alt string, message string) error
 	// Removes any user mentions from the message.
@@ -57,6 +59,21 @@ func (c *SlackClient) SendImage(channelId string, image string, alt string) erro
 	)
 	if err != nil {
 		return fmt.Errorf("SendImage: unable to send an image to channel %s: %w", channelId, err)
+	}
+
+	return nil
+}
+
+func (c *SlackClient) ReplyMessage(channelId string, timestamp string, message string) error {
+	// post the reply message on slack
+	_, _, err := c.slack.PostMessage(
+		channelId,
+		slackExternal.MsgOptionTS(timestamp),
+		slackExternal.MsgOptionText(message, false),
+		slackExternal.MsgOptionAsUser(true),
+	)
+	if err != nil {
+		return fmt.Errorf("ReplyMessage: unable to reply to channel %s with timestamp %s: %w", channelId, timestamp, err)
 	}
 
 	return nil

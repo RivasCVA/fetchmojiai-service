@@ -108,15 +108,11 @@ components:
         application/json:
           schema:
             properties:
-              image:
-                description: A URL to the imagination
-                type: string
-              user:
-                description: The id of the user on Slack
-                type: string
+              accepted:
+                description: Determines whether the prompt was accepted
+                type: boolean
             required:
-              - image
-              - user
+              - accepted
   
     BadRequest:
         description: Bad Request

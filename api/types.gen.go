@@ -41,11 +41,8 @@ type BadRequest = Error
 
 // ImagineResponse defines model for ImagineResponse.
 type ImagineResponse struct {
-	// Image A URL to the imagination
-	Image string `json:"image"`
-
-	// User The id of the user on Slack
-	User string `json:"user"`
+	// Accepted Determines whether the prompt was accepted
+	Accepted bool `json:"accepted"`
 }
 
 // InternalServerError A generic error
