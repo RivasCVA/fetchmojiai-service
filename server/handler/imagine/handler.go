@@ -42,8 +42,8 @@ func (h *ImagineHandler) Imagine(w http.ResponseWriter, r *http.Request) {
 	// only reply to messages that have a mention
 	// note: slack also pings the endpoint when the bot sends messages
 	if strings.Contains(body.Event.Text, "@") {
-		// asynchronously generate the image and reply to the user
-		go generateAndReply(h, body.Event)
+		// asynchronously generate the emoji and reply to the user
+		go processEmojiRequest(h, body.Event)
 	}
 
 	// respond

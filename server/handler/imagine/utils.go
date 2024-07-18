@@ -11,8 +11,8 @@ const (
 	EMOJI_CHECK   = ":check-check:"
 )
 
-// Generates an image through OpenAI and replies to the user via Slack.
-func generateAndReply(h *ImagineHandler, event api.SlackEvent) {
+// Generates an emoji through OpenAI and replies to the user via Slack.
+func processEmojiRequest(h *ImagineHandler, event api.SlackEvent) {
 	// extract the properties
 	prompt := h.slackClient.StripUserMentions(event.Text)
 	userId := event.User
