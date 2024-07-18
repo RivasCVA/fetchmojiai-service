@@ -38,16 +38,22 @@ func (h *ImagineHandler) Imagine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// extract the properties
+	event := body.Event
+	prompt := event.Text
+	userId := event.User
+	timestamp := event.Ts
+
 	// ask openai
-	url, err := h.openaiClient.GenerateImage(body.Prompt)
+	url, err := h.openaiClient.GenerateImage(prompt)
 	if err != nil {
 		fmt.Println(fmt.Errorf("Imagine: unable to generate the image: %w", err))
 		response.WriteError(w, http.StatusInternalServerError, "unable to generate the image")
 		return
 	}
 
-	// send image via slack
-	err = h.slackClient.SendImage("U0570NSD8P6", url, body.Prompt)
+	// send reply image and message via slack
+	err = h.slackClient.ReplyImageWithMessage(userId, timestamp, url, prompt, fmt.Sprintf("<@%s> %s", userId, prompt))
 	if err != nil {
 		fmt.Println(fmt.Errorf("Imagine: unable to send the image to slack: %w", err))
 		response.WriteError(w, http.StatusInternalServerError, "unable to send the image to slack")
@@ -55,6 +61,9 @@ func (h *ImagineHandler) Imagine(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// respond
-	out := api.ImagineResponse{Image: url}
+	out := api.ImagineResponse{
+		Image: url,
+		User:  userId,
+	}
 	response.Write(w, http.StatusOK, out)
 }

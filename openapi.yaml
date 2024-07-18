@@ -23,11 +23,26 @@ paths:
             schema:
               type: object
               properties:
-                prompt:
-                  description: A prompt to imagine
+                team_id:
+                  description: The team id
                   type: string
+                type:
+                  description: The event type
+                event_id:
+                  description: The event id
+                  type: string
+                event_time:
+                  description: The event time
+                  type: integer
+                  format: int64
+                event:
+                  $ref: "#/components/schemas/SlackEvent"
               required:
-                - prompt
+                - team_id
+                - type
+                - event_id
+                - event_time
+                - event
       responses:
         200:
           $ref: "#/components/responses/ImagineResponse"
@@ -38,6 +53,31 @@ paths:
 
 components:
   schemas:
+    SlackEvent:
+      description: A slack event
+      properties:
+        user:
+          description: The user id of the sender
+          type: string
+        channel:
+          description: The channel id the message was sent from
+          type: string
+        text:
+          description: The content text
+          type: string
+        ts:
+          description: The message timestamp
+          type: string
+        event_ts:
+          description: The event timestamp
+          type: string
+      required:
+        - user
+        - channel
+        - text
+        - ts
+        - event_ts
+
     Error:
       description: A generic error
       properties:
@@ -71,8 +111,12 @@ components:
               image:
                 description: A URL to the imagination
                 type: string
+              user:
+                description: The id of the user on Slack
+                type: string
             required:
               - image
+              - user
   
     BadRequest:
         description: Bad Request

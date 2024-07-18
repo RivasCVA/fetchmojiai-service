@@ -8,10 +8,12 @@ import (
 )
 
 type SlackClientInterface interface {
-	// Sends a message to a given user.
-	SendMessage(userId string, message string) error
-	// Sends an image to a given user.
-	SendImage(userId string, image string, alt string) error
+	// Sends a message to a channel. A user id can be used for direct messages.
+	SendMessage(channelId string, message string) error
+	// Sends an image to a channel. A user id can be used for direct messages.
+	SendImage(channelId string, image string, alt string) error
+	// Replies an image with a message as a thread in a channel. A user id can be used for direct messages.
+	ReplyImageWithMessage(channelId string, timestamp string, image string, alt string, message string) error
 }
 
 type SlackClient struct {
@@ -28,29 +30,45 @@ func NewClient() SlackClientInterface {
 	}
 }
 
-func (c *SlackClient) SendMessage(userId string, message string) error {
+func (c *SlackClient) SendMessage(channelId string, message string) error {
 	// post the message on slack
 	_, _, err := c.slack.PostMessage(
-		userId,
+		channelId,
 		slackExternal.MsgOptionText(message, false),
 		slackExternal.MsgOptionAsUser(true),
 	)
 	if err != nil {
-		return fmt.Errorf("sendMessage: unable to send a message to user %s: %w", userId, err)
+		return fmt.Errorf("SendMessage: unable to send a message to channel %s: %w", channelId, err)
 	}
 
 	return nil
 }
 
-func (c *SlackClient) SendImage(userId string, image string, alt string) error {
+func (c *SlackClient) SendImage(channelId string, image string, alt string) error {
 	// post the image on slack
 	_, _, err := c.slack.PostMessage(
-		userId,
+		channelId,
 		slackExternal.MsgOptionAttachments(slackExternal.Attachment{ImageURL: image, Fallback: alt}),
 		slackExternal.MsgOptionAsUser(true),
 	)
 	if err != nil {
-		return fmt.Errorf("SendImage: unable to send an image to user %s: %w", userId, err)
+		return fmt.Errorf("SendImage: unable to send an image to channel %s: %w", channelId, err)
+	}
+
+	return nil
+}
+
+func (c *SlackClient) ReplyImageWithMessage(channelId string, timestamp string, image string, alt string, message string) error {
+	// post the reply image and message on slack
+	_, _, err := c.slack.PostMessage(
+		channelId,
+		slackExternal.MsgOptionTS(timestamp),
+		slackExternal.MsgOptionAttachments(slackExternal.Attachment{ImageURL: image, Fallback: alt}),
+		slackExternal.MsgOptionText(message, false),
+		slackExternal.MsgOptionAsUser(true),
+	)
+	if err != nil {
+		return fmt.Errorf("ReplyImageWithMessage: unable to reply to channel %s with timestamp %s: %w", channelId, timestamp, err)
 	}
 
 	return nil

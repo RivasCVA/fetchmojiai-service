@@ -18,6 +18,24 @@ type Error struct {
 // ErrorCode defines model for ErrorCode.
 type ErrorCode string
 
+// SlackEvent A slack event
+type SlackEvent struct {
+	// Channel The channel id the message was sent from
+	Channel string `json:"channel"`
+
+	// EventTs The event timestamp
+	EventTs string `json:"event_ts"`
+
+	// Text The content text
+	Text string `json:"text"`
+
+	// Ts The message timestamp
+	Ts string `json:"ts"`
+
+	// User The user id of the sender
+	User string `json:"user"`
+}
+
 // BadRequest A generic error
 type BadRequest = Error
 
@@ -25,6 +43,9 @@ type BadRequest = Error
 type ImagineResponse struct {
 	// Image A URL to the imagination
 	Image string `json:"image"`
+
+	// User The id of the user on Slack
+	User string `json:"user"`
 }
 
 // InternalServerError A generic error
@@ -32,8 +53,20 @@ type InternalServerError = Error
 
 // ImagineJSONBody defines parameters for Imagine.
 type ImagineJSONBody struct {
-	// Prompt A prompt to imagine
-	Prompt string `json:"prompt"`
+	// Event A slack event
+	Event SlackEvent `json:"event"`
+
+	// EventId The event id
+	EventId string `json:"event_id"`
+
+	// EventTime The event time
+	EventTime int64 `json:"event_time"`
+
+	// TeamId The team id
+	TeamId string `json:"team_id"`
+
+	// Type The event type
+	Type interface{} `json:"type"`
 }
 
 // ImagineJSONRequestBody defines body for Imagine for application/json ContentType.
