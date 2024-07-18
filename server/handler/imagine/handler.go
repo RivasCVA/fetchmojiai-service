@@ -8,6 +8,7 @@ import (
 
 	"github.com/RivasCVA/fetchmojiai-service/api"
 	"github.com/RivasCVA/fetchmojiai-service/client/openai"
+	"github.com/RivasCVA/fetchmojiai-service/client/slack"
 	"github.com/RivasCVA/fetchmojiai-service/server/response"
 )
 
@@ -17,11 +18,13 @@ type ImagineHandlerInterface interface {
 
 type ImagineHandler struct {
 	openaiClient openai.OpenAIClientInterface
+	slackClient  slack.SlackClientInterface
 }
 
-func NewHandler(openaiClient openai.OpenAIClientInterface) ImagineHandlerInterface {
+func NewHandler(openaiClient openai.OpenAIClientInterface, slackClient slack.SlackClientInterface) ImagineHandlerInterface {
 	return &ImagineHandler{
 		openaiClient: openaiClient,
+		slackClient:  slackClient,
 	}
 }
 
@@ -40,6 +43,14 @@ func (h *ImagineHandler) Imagine(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(fmt.Errorf("Imagine: unable to generate the image: %w", err))
 		response.WriteError(w, http.StatusInternalServerError, "unable to generate the image")
+		return
+	}
+
+	// send image via slack
+	err = h.slackClient.SendImage("U0570NSD8P6", url, body.Prompt)
+	if err != nil {
+		fmt.Println(fmt.Errorf("Imagine: unable to send the image to slack: %w", err))
+		response.WriteError(w, http.StatusInternalServerError, "unable to send the image to slack")
 		return
 	}
 

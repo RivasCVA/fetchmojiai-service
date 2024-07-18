@@ -11,3 +11,4 @@ linters-settings:
       - "github.com/sashabaranov/go-openai.ChatCompletionRequest"
       - "github.com/sashabaranov/go-openai.ChatCompletionMessage"
       - "github.com/sashabaranov/go-openai.ImageRequest"
+      - "github.com/slack-go/slack.Attachment"

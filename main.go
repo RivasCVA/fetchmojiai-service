@@ -6,6 +6,7 @@ import (
 
 	"github.com/RivasCVA/fetchmojiai-service/api"
 	"github.com/RivasCVA/fetchmojiai-service/client/openai"
+	"github.com/RivasCVA/fetchmojiai-service/client/slack"
 	"github.com/RivasCVA/fetchmojiai-service/server"
 	"github.com/RivasCVA/fetchmojiai-service/server/handler/imagine"
 	"github.com/RivasCVA/fetchmojiai-service/server/middleware"
@@ -22,10 +23,11 @@ func main() {
 
 	// setup clients
 	openaiClient := openai.NewClient()
+	slackClient := slack.NewClient()
 
 	// setup the server
 	s := server.NewServer(
-		imagine.NewHandler(openaiClient),
+		imagine.NewHandler(openaiClient, slackClient),
 	)
 
 	// setup the handler
