@@ -26,7 +26,8 @@ func generateAndReply(h *ImagineHandler, event api.SlackEvent) {
 	}
 
 	// ask openai
-	url, err := h.openaiClient.GenerateImage(prompt)
+	// note: curate the prompt to have emoji in its suffix
+	url, err := h.openaiClient.GenerateImage(fmt.Sprintf("%s emoji", prompt))
 	if err != nil {
 		fmt.Println(fmt.Errorf("generateAndReply: unable to generate the image on openapi: %w", err))
 		return
