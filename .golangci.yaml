@@ -1,0 +1,10 @@
+linters:
+  enable:
+    - gofmt
+    - goimports
+    - exhaustruct
+
+linters-settings:
+  exhaustruct:
+    exclude:
+      - "net/http.Server"

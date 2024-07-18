@@ -1,0 +1,85 @@
+openapi: 3.0.0
+
+info:
+  version: 1.0.0
+  title: FetchmojiAI Service
+  description: A Slack bot service that generates emojis
+
+servers:
+  - url: http://localhost:8080/v1
+
+paths:
+  /imagine:
+    post:
+      description: Imagines an emoji
+      operationId: imagine
+      tags:
+        - Imagine
+      requestBody:
+        description: The request body to imagine an emoji
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt:
+                  description: A prompt to imagine
+                  type: string
+              required:
+                - prompt
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  image:
+                    description: A URL to the imagination
+                    type: string
+        400:
+          $ref: "#/components/responses/BadRequest"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  schemas:
+    Error:
+      description: A generic error
+      properties:
+        status:
+          type: integer
+          format: int64
+          example: 500
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          example: ERROR
+        message:
+          type: string
+          example: Error
+      required:
+        - status
+        - code
+        - message
+
+    ErrorCode:
+      type: string
+      enum:
+        - ERROR
+
+  responses:
+    BadRequest:
+        description: Invalid request payload
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
+
+    InternalServerError:
+      description: There was an internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
