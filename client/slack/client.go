@@ -3,6 +3,8 @@ package slack
 import (
 	"fmt"
 	"os"
+	"regexp"
+	"strings"
 
 	slackExternal "github.com/slack-go/slack"
 )
@@ -14,6 +16,8 @@ type SlackClientInterface interface {
 	SendImage(channelId string, image string, alt string) error
 	// Replies an image with a message as a thread in a channel. A user id can be used for direct messages.
 	ReplyImageWithMessage(channelId string, timestamp string, image string, alt string, message string) error
+	// Removes any user mentions from the message.
+	StripUserMentions(message string) string
 }
 
 type SlackClient struct {
@@ -72,4 +76,9 @@ func (c *SlackClient) ReplyImageWithMessage(channelId string, timestamp string, 
 	}
 
 	return nil
+}
+
+func (c *SlackClient) StripUserMentions(message string) string {
+	regex := regexp.MustCompile("<@[^>]+>")
+	return strings.TrimSpace(regex.ReplaceAllString(message, ""))
 }

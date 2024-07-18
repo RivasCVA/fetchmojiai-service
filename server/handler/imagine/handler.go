@@ -40,7 +40,7 @@ func (h *ImagineHandler) Imagine(w http.ResponseWriter, r *http.Request) {
 
 	// extract the properties
 	event := body.Event
-	prompt := event.Text
+	prompt := h.slackClient.StripUserMentions(event.Text)
 	userId := event.User
 	timestamp := event.Ts
 
