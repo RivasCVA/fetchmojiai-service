@@ -21,6 +21,12 @@ type ErrorCode string
 // BadRequest A generic error
 type BadRequest = Error
 
+// ImagineResponse defines model for ImagineResponse.
+type ImagineResponse struct {
+	// Image A URL to the imagination
+	Image string `json:"image"`
+}
+
 // InternalServerError A generic error
 type InternalServerError = Error
 

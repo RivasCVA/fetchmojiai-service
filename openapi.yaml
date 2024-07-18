@@ -30,15 +30,7 @@ paths:
                 - prompt
       responses:
         200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  image:
-                    description: A URL to the imagination
-                    type: string
+          $ref: "#/components/responses/ImagineResponse"
         400:
           $ref: "#/components/responses/BadRequest"
         500:
@@ -70,15 +62,27 @@ components:
         - ERROR
 
   responses:
+    ImagineResponse:
+      description: Imagine Response
+      content:
+        application/json:
+          schema:
+            properties:
+              image:
+                description: A URL to the imagination
+                type: string
+            required:
+              - image
+  
     BadRequest:
-        description: Invalid request payload
+        description: Bad Request
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Error'
 
     InternalServerError:
-      description: There was an internal server error
+      description: Internal Server Error
       content:
         application/json:
           schema:

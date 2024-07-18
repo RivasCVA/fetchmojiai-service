@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/RivasCVA/fetchmojiai-service/api"
+	"github.com/RivasCVA/fetchmojiai-service/client/openai"
 	"github.com/RivasCVA/fetchmojiai-service/server"
 	"github.com/RivasCVA/fetchmojiai-service/server/handler/imagine"
 	"github.com/RivasCVA/fetchmojiai-service/server/middleware"
@@ -19,9 +20,12 @@ func main() {
 		log.Fatal("unable to load .env variables")
 	}
 
+	// setup clients
+	openaiClient := openai.NewClient()
+
 	// setup the server
 	s := server.NewServer(
-		imagine.NewHandler(),
+		imagine.NewHandler(openaiClient),
 	)
 
 	// setup the handler

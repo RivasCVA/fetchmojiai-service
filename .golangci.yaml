@@ -8,3 +8,5 @@ linters-settings:
   exhaustruct:
     exclude:
       - "net/http.Server"
+      - "github.com/sashabaranov/go-openai.ChatCompletionRequest"
+      - "github.com/sashabaranov/go-openai.ChatCompletionMessage"
