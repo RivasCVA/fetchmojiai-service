@@ -10,3 +10,4 @@ linters-settings:
       - "net/http.Server"
       - "github.com/sashabaranov/go-openai.ChatCompletionRequest"
       - "github.com/sashabaranov/go-openai.ChatCompletionMessage"
+      - "github.com/sashabaranov/go-openai.ImageRequest"

@@ -36,14 +36,14 @@ func (h *ImagineHandler) Imagine(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// ask openai
-	content, err := h.openaiClient.Chat(body.Prompt)
+	url, err := h.openaiClient.GenerateImage(body.Prompt)
 	if err != nil {
-		fmt.Println(fmt.Errorf("Imagine: unable to chat with openai: %w", err))
-		response.WriteError(w, http.StatusInternalServerError, "unable to chat with openai")
+		fmt.Println(fmt.Errorf("Imagine: unable to generate the image: %w", err))
+		response.WriteError(w, http.StatusInternalServerError, "unable to generate the image")
 		return
 	}
 
 	// respond
-	out := api.ImagineResponse{Image: content}
+	out := api.ImagineResponse{Image: url}
 	response.Write(w, http.StatusOK, out)
 }

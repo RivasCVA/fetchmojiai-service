@@ -11,6 +11,8 @@ import (
 type OpenAIClientInterface interface {
 	// Sends a chat to GPT.
 	Chat(prompt string) (string, error)
+	// Generates an image using DALL-E.
+	GenerateImage(prompt string) (string, error)
 }
 
 type OpenAIClient struct {
@@ -45,4 +47,21 @@ func (c *OpenAIClient) Chat(prompt string) (string, error) {
 	// return the message response
 	content := resp.Choices[0].Message.Content
 	return content, nil
+}
+
+func (c *OpenAIClient) GenerateImage(prompt string) (string, error) {
+	// send the prompt to dall-e
+	resp, err := c.openai.CreateImage(context.Background(), openaiExternal.ImageRequest{
+		Model:  openaiExternal.CreateImageModelDallE2,
+		Prompt: prompt,
+		Size:   "1024x1024",
+		N:      1,
+	})
+	if err != nil {
+		return "", fmt.Errorf("GenerateImage: unable to generate an image: %w", err)
+	}
+
+	// return the image url
+	url := resp.Data[0].URL
+	return url, nil
 }
