@@ -51,7 +51,7 @@ ngrok http http://localhost:8080
 
 > Follow installation instructions [here](https://dashboard.ngrok.com/get-started/setup/macos).
 
-5. Copy the `ngrok` "Forwarding" address and paste it as the "Request URL" on the Slack App [Event Subscriptions]((https://a.slack-edge.com/80588/img/api/event_url_verification.png)) dashbaord
+5. Copy the `ngrok` "Forwarding" address and paste it as the "Request URL" on the Slack App [Event Subscriptions](https://api.slack.com/apps/A0699CL6AVB/event-subscriptions) dashbaord and append `/v1/imagine` to the end of the path.
 
 <img
     src="https://a.slack-edge.com/80588/img/api/event_url_verification.png"

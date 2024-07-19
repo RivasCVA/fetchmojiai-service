@@ -21,7 +21,7 @@ func processEmojiRequest(h *ImagineHandler, event api.SlackEvent) {
 	// acknowledge the user via slack
 	err := h.slackClient.ReplyMessage(userId, timestamp, fmt.Sprintf("Generating your emoji %s", EMOJI_LOADING))
 	if err != nil {
-		fmt.Println(fmt.Errorf("generateAndReply: unable to send the acknowledgement to slack: %w", err))
+		fmt.Println(fmt.Errorf("processEmojiRequest: unable to send the acknowledgement to slack: %w", err))
 		return
 	}
 
@@ -29,14 +29,14 @@ func processEmojiRequest(h *ImagineHandler, event api.SlackEvent) {
 	// note: curate the prompt to have emoji in its suffix
 	url, err := h.openaiClient.GenerateImage(fmt.Sprintf("%s emoji", prompt))
 	if err != nil {
-		fmt.Println(fmt.Errorf("generateAndReply: unable to generate the image on openapi: %w", err))
+		fmt.Println(fmt.Errorf("processEmojiRequest: unable to generate the image on openapi: %w", err))
 		return
 	}
 
 	// send reply image and message via slack
 	err = h.slackClient.ReplyImageWithMessage(userId, timestamp, url, prompt, fmt.Sprintf("%s %s", EMOJI_CHECK, prompt))
 	if err != nil {
-		fmt.Println(fmt.Errorf("generateAndReply: unable to send the image to slack: %w", err))
+		fmt.Println(fmt.Errorf("processEmojiRequest: unable to send the image to slack: %w", err))
 		return
 	}
 }

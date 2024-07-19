@@ -43,6 +43,9 @@ type BadRequest = Error
 type ImagineResponse struct {
 	// Accepted Determines whether the prompt was accepted
 	Accepted bool `json:"accepted"`
+
+	// Challenge An optional field used by Slack for endpoint verification
+	Challenge *string `json:"challenge,omitempty"`
 }
 
 // InternalServerError A generic error
@@ -50,6 +53,9 @@ type InternalServerError = Error
 
 // ImagineJSONBody defines parameters for Imagine.
 type ImagineJSONBody struct {
+	// Challenge An optional field used by Slack for endpoint verification
+	Challenge *string `json:"challenge,omitempty"`
+
 	// Event A slack event
 	Event SlackEvent `json:"event"`
 

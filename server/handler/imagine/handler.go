@@ -39,6 +39,13 @@ func (h *ImagineHandler) Imagine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// respond the slack challenge if present
+	if body.Challenge != nil {
+		out := api.ImagineResponse{Accepted: true, Challenge: body.Challenge}
+		response.Write(w, http.StatusOK, out)
+		return
+	}
+
 	// only reply to messages that have a mention
 	// note: slack also pings the endpoint when the bot sends messages
 	if strings.Contains(body.Event.Text, "@") {
@@ -47,6 +54,6 @@ func (h *ImagineHandler) Imagine(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// respond
-	out := api.ImagineResponse{Accepted: true}
+	out := api.ImagineResponse{Accepted: true, Challenge: nil}
 	response.Write(w, http.StatusOK, out)
 }
